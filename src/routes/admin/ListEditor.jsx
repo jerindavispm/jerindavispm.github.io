@@ -56,7 +56,7 @@ export default function ListEditor({
     const row = toRow(draft);
     const { error } = await supabase
       .from(table)
-      .update({ ...row, updated_at: new Date().toISOString() })
+      .update(row)
       .eq("id", item.id);
     setBusyId(null);
     if (error) { setToast({ kind: "err", message: error.message }); return; }

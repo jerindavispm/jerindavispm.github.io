@@ -30,7 +30,6 @@ export default function ProfileEditor() {
       phone:      draft.phone,
       github:     draft.github,
       linkedin:   draft.linkedin,
-      updated_at: new Date().toISOString(),
     }).eq("id", 1);
     setBusy(false);
     if (error) {
