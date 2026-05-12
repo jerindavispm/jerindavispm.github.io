@@ -1,8 +1,17 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence, useMotionValue, useTransform, useSpring } from "motion/react";
 import { X, MapPin, Mail, Phone, Copy, Check } from "lucide-react";
-import { profile } from "../lib/data";
+import { useContent } from "../lib/ContentContext";
 import { GithubIcon, LinkedinIcon } from "./BrandIcons";
+
+function ghHandleFromUrl(url) {
+  const m = (url || "").match(/github\.com\/([^/?#]+)/i);
+  return m ? `@${m[1]}` : "GitHub";
+}
+function liHandleFromUrl(url) {
+  const m = (url || "").match(/linkedin\.com\/in\/([^/?#]+)/i);
+  return m ? `/in/${m[1]}` : "LinkedIn";
+}
 
 function CopyChip({ value, label }) {
   const [copied, setCopied] = useState(false);
@@ -57,6 +66,7 @@ function Row({ icon: Icon, label, value, href, external, copyValue }) {
 }
 
 export default function BusinessCard({ open, onClose }) {
+  const { profile } = useContent();
   const cardRef = useRef(null);
   const rotX = useMotionValue(0);
   const rotY = useMotionValue(0);
@@ -213,14 +223,14 @@ export default function BusinessCard({ open, onClose }) {
                     <Row
                       icon={GithubIcon}
                       label="GitHub"
-                      value="@jerindavispm"
+                      value={ghHandleFromUrl(profile.github)}
                       href={profile.github}
                       external
                     />
                     <Row
                       icon={LinkedinIcon}
                       label="LinkedIn"
-                      value="/in/jerin-davis-dev"
+                      value={liHandleFromUrl(profile.linkedin)}
                       href={profile.linkedin}
                       external
                     />

@@ -2,12 +2,13 @@ import { motion } from "motion/react";
 import SectionHeader from "./SectionHeader";
 import SectionReveal from "./SectionReveal";
 import Spotlight from "./Spotlight";
-import { experience, certifications } from "../lib/data";
+import { useContent } from "../lib/ContentContext";
 import { Briefcase, Award } from "lucide-react";
 
 const easeOut = [0.22, 1, 0.36, 1];
 
 export default function Experience() {
+  const { experience, certifications } = useContent();
   return (
     <section id="work" className="relative py-28 sm:py-36 border-t border-white/5">
       <div className="mx-auto max-w-6xl px-5 sm:px-8">
@@ -20,7 +21,7 @@ export default function Experience() {
           {/* Internship card */}
           <div className="lg:col-span-8 flex flex-col gap-6">
             {experience.map((job, i) => (
-              <SectionReveal key={i}>
+              <SectionReveal key={job.id || i}>
                 <Spotlight className="rounded-3xl" size={520} color="rgba(167, 139, 250, 0.14)">
                 <article className="group relative overflow-hidden rounded-3xl glass p-7 sm:p-9 hover:bg-white/[0.04] transition-colors duration-500">
                   <div
@@ -96,7 +97,7 @@ export default function Experience() {
                   <ul className="mt-7 space-y-0">
                     {certifications.map((c, i) => (
                       <motion.li
-                        key={i}
+                        key={c.id || i}
                         initial={{ opacity: 0, x: -12, filter: "blur(6px)" }}
                         whileInView={{ opacity: 1, x: 0, filter: "blur(0px)" }}
                         viewport={{ once: true, margin: "-10% 0px" }}
@@ -116,7 +117,7 @@ export default function Experience() {
                         )}
                         <div className="text-[14.5px] text-zinc-100 leading-snug">{c.name}</div>
                         <div className="mt-1.5 inline-flex items-center gap-2 text-[10.5px] font-mono uppercase tracking-[0.2em] text-zinc-500">
-                          {c.date === "Ongoing" && (
+                          {c.isOngoing && (
                             <span className="relative flex h-1.5 w-1.5">
                               <span className="absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75 animate-ping" />
                               <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-amber-400" />

@@ -4,7 +4,7 @@ import { GraduationCap, Languages as LangIcon, Compass } from "lucide-react";
 import SectionHeader from "./SectionHeader";
 import SectionReveal from "./SectionReveal";
 import Spotlight from "./Spotlight";
-import { profile, education, languages } from "../lib/data";
+import { useContent } from "../lib/ContentContext";
 
 const easeOut = [0.22, 1, 0.36, 1];
 
@@ -94,6 +94,7 @@ function EducationItem({ ed, index, total }) {
 }
 
 export default function About() {
+  const { profile, education, languages } = useContent();
   return (
     <section id="about" className="relative py-28 sm:py-36 overflow-hidden">
       {/* Soft background glow */}
@@ -119,7 +120,7 @@ export default function About() {
                 </div>
                 <ul className="mt-7">
                   {education.map((ed, i) => (
-                    <EducationItem key={i} ed={ed} index={i} total={education.length} />
+                    <EducationItem key={ed.id || i} ed={ed} index={i} total={education.length} />
                   ))}
                 </ul>
               </div>

@@ -1,6 +1,7 @@
-import { profile } from "../lib/data";
+import { useContent } from "../lib/ContentContext";
 
 export default function Footer() {
+  const { profile } = useContent();
   return (
     <footer className="relative border-t border-white/5 py-10">
       <div className="mx-auto max-w-6xl px-5 sm:px-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">

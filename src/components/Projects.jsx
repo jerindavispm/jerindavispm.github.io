@@ -2,75 +2,92 @@ import { motion } from "motion/react";
 import SectionHeader from "./SectionHeader";
 import SectionReveal from "./SectionReveal";
 import Spotlight from "./Spotlight";
-import { projects } from "../lib/data";
-import { ArrowUpRight } from "lucide-react";
+import { useContent } from "../lib/ContentContext";
+import { ArrowUpRight, Link as LinkIcon } from "lucide-react";
 
 function ProjectCard({ project, index }) {
+  const hasLink = !!project.link && /^https?:\/\//i.test(project.link);
+  const Wrapper = hasLink ? motion.a : motion.article;
+  const wrapperProps = hasLink
+    ? { href: project.link, target: "_blank", rel: "noreferrer noopener" }
+    : {};
+
   return (
     <SectionReveal delay={index * 0.05}>
       <Spotlight className="rounded-3xl" size={480} color="rgba(167, 139, 250, 0.16)">
-      <motion.article
-        whileHover="hover"
-        className="group relative isolate overflow-hidden rounded-3xl border border-white/[0.06] bg-gradient-to-br from-white/[0.04] to-white/[0.01] p-7 sm:p-10 transition-all duration-500 hover:border-white/[0.12]"
-      >
-        {/* Hover spotlight */}
-        <motion.div
-          variants={{
-            hover: { opacity: 1, scale: 1 },
-          }}
-          initial={{ opacity: 0, scale: 0.95 }}
-          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-          className="absolute -top-32 -right-32 h-80 w-80 rounded-full bg-gradient-to-br from-violet-500/20 via-indigo-500/10 to-transparent blur-3xl pointer-events-none"
-        />
+        <Wrapper
+          {...wrapperProps}
+          whileHover="hover"
+          className={`group relative isolate overflow-hidden rounded-3xl border border-white/[0.06] bg-gradient-to-br from-white/[0.04] to-white/[0.01] p-7 sm:p-10 transition-all duration-500 hover:border-white/[0.12] block ${
+            hasLink ? "cursor-pointer" : "cursor-default"
+          }`}
+        >
+          {/* Hover spotlight */}
+          <motion.div
+            variants={{ hover: { opacity: 1, scale: 1 } }}
+            initial={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            className="absolute -top-32 -right-32 h-80 w-80 rounded-full bg-gradient-to-br from-violet-500/20 via-indigo-500/10 to-transparent blur-3xl pointer-events-none"
+          />
 
-        <div className="relative flex flex-col h-full min-h-[280px] sm:min-h-[320px]">
-          <div className="flex items-start justify-between gap-4">
-            <div>
-              <div className="text-[11px] font-mono uppercase tracking-[0.22em] text-zinc-500">
-                {project.tag} · {project.year}
+          <div className="relative flex flex-col h-full min-h-[280px] sm:min-h-[320px]">
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <div className="text-[11px] font-mono uppercase tracking-[0.22em] text-zinc-500">
+                  {project.tag} · {project.year}
+                </div>
+                <h3 className="mt-3 text-[26px] sm:text-[30px] leading-[1.05] tracking-[-0.025em] font-medium text-zinc-50">
+                  {project.name}
+                </h3>
               </div>
-              <h3 className="mt-3 text-[26px] sm:text-[30px] leading-[1.05] tracking-[-0.025em] font-medium text-zinc-50">
-                {project.name}
-              </h3>
+
+              <motion.div
+                variants={hasLink ? { hover: { rotate: 45, x: 4, y: -4 } } : {}}
+                transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                className={`grid place-items-center h-10 w-10 rounded-full border bg-white/[0.03] transition-colors ${
+                  hasLink
+                    ? "border-white/8 text-zinc-300 group-hover:text-white group-hover:border-white/20"
+                    : "border-white/5 text-zinc-600"
+                }`}
+                title={hasLink ? "Open project" : "Link not set"}
+              >
+                {hasLink ? (
+                  <ArrowUpRight size={16} strokeWidth={1.6} />
+                ) : (
+                  <LinkIcon size={13} strokeWidth={1.7} />
+                )}
+              </motion.div>
             </div>
 
-            <motion.div
-              variants={{ hover: { rotate: 45, x: 4, y: -4 } }}
-              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-              className="grid place-items-center h-10 w-10 rounded-full border border-white/8 bg-white/[0.03] text-zinc-300 group-hover:text-white group-hover:border-white/20 transition-colors"
-            >
-              <ArrowUpRight size={16} strokeWidth={1.6} />
-            </motion.div>
+            <p className="mt-5 text-[15px] leading-relaxed text-zinc-400 max-w-xl">
+              {project.summary}
+            </p>
+
+            <div className="mt-auto pt-8 flex flex-wrap items-center gap-x-5 gap-y-3">
+              <div className="inline-flex items-center gap-1.5 text-[12px] font-mono text-zinc-500">
+                <span className="h-1 w-1 rounded-full bg-zinc-600" />
+                {project.role}
+              </div>
+              <div className="flex flex-wrap gap-1.5">
+                {project.stack.map((s) => (
+                  <span
+                    key={s}
+                    className="rounded-md border border-white/8 bg-white/[0.02] px-2.5 py-1 text-[11.5px] font-mono text-zinc-300"
+                  >
+                    {s}
+                  </span>
+                ))}
+              </div>
+            </div>
           </div>
-
-          <p className="mt-5 text-[15px] leading-relaxed text-zinc-400 max-w-xl">
-            {project.summary}
-          </p>
-
-          <div className="mt-auto pt-8 flex flex-wrap items-center gap-x-5 gap-y-3">
-            <div className="inline-flex items-center gap-1.5 text-[12px] font-mono text-zinc-500">
-              <span className="h-1 w-1 rounded-full bg-zinc-600" />
-              {project.role}
-            </div>
-            <div className="flex flex-wrap gap-1.5">
-              {project.stack.map((s) => (
-                <span
-                  key={s}
-                  className="rounded-md border border-white/8 bg-white/[0.02] px-2.5 py-1 text-[11.5px] font-mono text-zinc-300"
-                >
-                  {s}
-                </span>
-              ))}
-            </div>
-          </div>
-        </div>
-      </motion.article>
+        </Wrapper>
       </Spotlight>
     </SectionReveal>
   );
 }
 
 export default function Projects() {
+  const { projects } = useContent();
   return (
     <section id="projects" className="relative py-28 sm:py-36 border-t border-white/5">
       <div className="mx-auto max-w-6xl px-5 sm:px-8">
@@ -82,7 +99,7 @@ export default function Projects() {
 
         <div className="mt-14 grid md:grid-cols-2 gap-6">
           {projects.map((p, i) => (
-            <ProjectCard key={p.name} project={p} index={i} />
+            <ProjectCard key={p.id || p.name} project={p} index={i} />
           ))}
         </div>
       </div>

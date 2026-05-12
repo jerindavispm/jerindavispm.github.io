@@ -2,7 +2,7 @@ import { useRef } from "react";
 import { motion } from "motion/react";
 import SectionHeader from "./SectionHeader";
 import SectionReveal from "./SectionReveal";
-import { skills } from "../lib/data";
+import { useContent } from "../lib/ContentContext";
 
 const easeOut = [0.22, 1, 0.36, 1];
 
@@ -49,6 +49,7 @@ function Chip({ label, index }) {
 }
 
 export default function Skills() {
+  const { skills } = useContent();
   const total = skills.reduce((acc, b) => acc + b.items.length, 0);
 
   return (
@@ -78,7 +79,7 @@ export default function Skills() {
 
         <div className="mt-14 grid sm:grid-cols-2 lg:grid-cols-2 gap-6">
           {skills.map((bucket, bi) => (
-            <SectionReveal key={bucket.group} delay={bi * 0.06}>
+            <SectionReveal key={bucket.id || bucket.group} delay={bi * 0.06}>
               <div className="group/bucket relative h-full rounded-3xl glass p-7 sm:p-8 hover:bg-white/[0.04] transition-colors duration-500">
                 {/* Bucket header */}
                 <div className="flex items-center justify-between gap-4">

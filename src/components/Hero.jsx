@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { ArrowRight, MapPin, Sparkles, ChevronDown } from "lucide-react";
-import { profile } from "../lib/data";
+import { useContent } from "../lib/ContentContext";
 
 const easeOut = [0.22, 1, 0.36, 1];
 
@@ -38,6 +38,7 @@ function AnimatedWord({ children, delay = 0 }) {
 }
 
 export default function Hero() {
+  const { profile } = useContent();
   const sectionRef = useRef(null);
   const dotsRef = useRef(null);
 

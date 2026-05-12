@@ -1,20 +1,29 @@
 import { motion } from "motion/react";
 import SectionReveal from "./SectionReveal";
 import Spotlight from "./Spotlight";
-import { profile } from "../lib/data";
+import { useContent } from "../lib/ContentContext";
 import { Mail, Phone, ArrowUpRight } from "lucide-react";
 import { GithubIcon, LinkedinIcon } from "./BrandIcons";
 
 const easeOut = [0.22, 1, 0.36, 1];
 
-const items = [
-  { icon: Mail,         label: "Email",    value: profile.email, href: `mailto:${profile.email}` },
-  { icon: Phone,        label: "Phone",    value: profile.phone, href: `tel:${profile.phone.replace(/\s/g, "")}` },
-  { icon: GithubIcon,   label: "GitHub",   value: "@jerindavispm", href: profile.github, external: true },
-  { icon: LinkedinIcon, label: "LinkedIn", value: "/in/jerin-davis-dev", href: profile.linkedin, external: true },
-];
+function ghHandleFromUrl(url) {
+  const m = (url || "").match(/github\.com\/([^/?#]+)/i);
+  return m ? `@${m[1]}` : "GitHub";
+}
+function liHandleFromUrl(url) {
+  const m = (url || "").match(/linkedin\.com\/in\/([^/?#]+)/i);
+  return m ? `/in/${m[1]}` : "LinkedIn";
+}
 
 export default function Contact() {
+  const { profile } = useContent();
+  const items = [
+    { icon: Mail,         label: "Email",    value: profile.email, href: `mailto:${profile.email}` },
+    { icon: Phone,        label: "Phone",    value: profile.phone, href: `tel:${profile.phone.replace(/\s/g, "")}` },
+    { icon: GithubIcon,   label: "GitHub",   value: ghHandleFromUrl(profile.github),   href: profile.github,   external: true },
+    { icon: LinkedinIcon, label: "LinkedIn", value: liHandleFromUrl(profile.linkedin), href: profile.linkedin, external: true },
+  ];
   return (
     <section id="contact" className="relative py-28 sm:py-40 border-t border-white/5 overflow-hidden">
       {/* Subtle glow */}

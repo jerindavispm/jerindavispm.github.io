@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Menu, X, IdCard } from "lucide-react";
-import { nav, profile } from "../lib/data";
+import { useContent } from "../lib/ContentContext";
 
 export default function Nav({ onOpenCard }) {
+  const { nav, profile } = useContent();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
 

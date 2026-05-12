@@ -1,6 +1,7 @@
-import { marqueeWords } from "../lib/data";
+import { useContent } from "../lib/ContentContext";
 
 export default function Marquee() {
+  const { marqueeWords } = useContent();
   const words = [...marqueeWords, ...marqueeWords];
   return (
     <section aria-hidden="true" className="relative py-10 border-y border-white/5 overflow-hidden">
