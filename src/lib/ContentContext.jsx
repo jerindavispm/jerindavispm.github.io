@@ -16,6 +16,7 @@ const FALLBACK_CONTENT = {
     isOngoing: c.date === "Ongoing",
   })),
   languages:      fallback.languages,
+  heroMeta:       fallback.heroMeta,
   marqueeWords:   fallback.marqueeWords,
 };
 

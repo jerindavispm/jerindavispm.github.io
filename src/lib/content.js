@@ -16,6 +16,7 @@ export async function fetchAllContent() {
     certsRes,
     languagesRes,
     educationRes,
+    heroMetaRes,
   ] = await Promise.all([
     supabase.from("profile").select("*").eq("id", 1).single(),
     supabase.from("nav_items").select("*").order("sort_order"),
@@ -26,12 +27,16 @@ export async function fetchAllContent() {
     supabase.from("certifications").select("*").order("sort_order"),
     supabase.from("languages").select("*").order("sort_order"),
     supabase.from("education").select("*").order("sort_order"),
+    supabase.from("hero_meta").select("*").order("sort_order"),
   ]);
 
+  // hero_meta may not exist yet on older deployments — treat as soft-fail.
+  const heroMetaSoftError =
+    heroMetaRes.error && /relation .* does not exist|not found/i.test(heroMetaRes.error.message || "");
   const firstError = [
     profileRes, navRes, experienceRes, projectsRes,
     skillGroupsRes, skillItemsRes, certsRes, languagesRes, educationRes,
-  ].find((r) => r.error)?.error;
+  ].find((r) => r.error)?.error || (heroMetaRes.error && !heroMetaSoftError ? heroMetaRes.error : null);
   if (firstError) throw firstError;
 
   const profileRow = profileRes.data;
@@ -93,6 +98,11 @@ export async function fetchAllContent() {
       isOngoing: c.is_ongoing,
     })),
     languages: (languagesRes.data || []).map((l) => l.name),
+    heroMeta: (heroMetaRes.data || []).map((m) => ({
+      id: m.id,
+      label: m.label,
+      value: m.value,
+    })),
     marqueeWords: [
       "ERP", "✦", "Business Process", "✦", "SQL", "✦",
       "Python", "✦", "Coordination", "✦", "Workflow", "✦",

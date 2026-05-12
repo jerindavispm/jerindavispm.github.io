@@ -103,6 +103,13 @@ export const certifications = [
 
 export const languages = ["English", "Tamil", "Malayalam", "Hindi"];
 
+export const heroMeta = [
+  { label: "Currently",  value: "BCA · Year 3"  },
+  { label: "Focus",      value: "ERP & process" },
+  { label: "Internship", value: "UPDOT"         },
+  { label: "Based in",   value: "Bangalore"     },
+];
+
 export const marqueeWords = [
   "ERP",
   "✦",

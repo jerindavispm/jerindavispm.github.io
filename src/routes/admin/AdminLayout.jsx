@@ -2,7 +2,7 @@ import { useState } from "react";
 import { motion } from "motion/react";
 import {
   User, Briefcase, FolderKanban, GraduationCap, Award, Languages as LangIcon,
-  Wrench, ListOrdered, LogOut, ExternalLink, RefreshCw
+  Wrench, ListOrdered, LogOut, ExternalLink, RefreshCw, LayoutDashboard
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../lib/AuthContext";
@@ -10,6 +10,7 @@ import { useContent } from "../../lib/ContentContext";
 import { Button } from "./ui";
 
 import ProfileEditor        from "./ProfileEditor";
+import HeroMetaEditor       from "./HeroMetaEditor";
 import ExperienceEditor     from "./ExperienceEditor";
 import ProjectsEditor       from "./ProjectsEditor";
 import SkillsEditor         from "./SkillsEditor";
@@ -19,14 +20,15 @@ import LanguagesEditor      from "./LanguagesEditor";
 import NavEditor            from "./NavEditor";
 
 const SECTIONS = [
-  { id: "profile",        label: "Profile",        icon: User,          component: ProfileEditor },
-  { id: "projects",       label: "Projects",       icon: FolderKanban,  component: ProjectsEditor },
-  { id: "experience",     label: "Experience",     icon: Briefcase,     component: ExperienceEditor },
-  { id: "skills",         label: "Skills",         icon: Wrench,        component: SkillsEditor },
-  { id: "education",      label: "Education",      icon: GraduationCap, component: EducationEditor },
-  { id: "certifications", label: "Certifications", icon: Award,         component: CertificationsEditor },
-  { id: "languages",      label: "Languages",      icon: LangIcon,      component: LanguagesEditor },
-  { id: "nav",            label: "Nav menu",       icon: ListOrdered,   component: NavEditor },
+  { id: "profile",        label: "Profile",        icon: User,            component: ProfileEditor },
+  { id: "hero-meta",      label: "Hero strip",     icon: LayoutDashboard, component: HeroMetaEditor },
+  { id: "projects",       label: "Projects",       icon: FolderKanban,    component: ProjectsEditor },
+  { id: "experience",     label: "Experience",     icon: Briefcase,       component: ExperienceEditor },
+  { id: "skills",         label: "Skills",         icon: Wrench,          component: SkillsEditor },
+  { id: "education",      label: "Education",      icon: GraduationCap,   component: EducationEditor },
+  { id: "certifications", label: "Certifications", icon: Award,           component: CertificationsEditor },
+  { id: "languages",      label: "Languages",      icon: LangIcon,        component: LanguagesEditor },
+  { id: "nav",            label: "Nav menu",       icon: ListOrdered,     component: NavEditor },
 ];
 
 export default function AdminLayout() {

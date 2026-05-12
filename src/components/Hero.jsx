@@ -38,7 +38,7 @@ function AnimatedWord({ children, delay = 0 }) {
 }
 
 export default function Hero() {
-  const { profile } = useContent();
+  const { profile, heroMeta } = useContent();
   const sectionRef = useRef(null);
   const dotsRef = useRef(null);
 
@@ -190,27 +190,27 @@ export default function Hero() {
         </motion.div>
 
         {/* Meta strip */}
-        <div className="mt-20 sm:mt-28 grid grid-cols-2 sm:grid-cols-4 gap-px overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.02]">
-          {[
-            { k: "Currently",   v: "BCA · Year 3" },
-            { k: "Focus",       v: "ERP & process" },
-            { k: "Internship",  v: "UPDOT" },
-            { k: "Based in",    v: "Bangalore" },
-          ].map((cell, i) => (
-            <motion.div
-              key={cell.k}
-              initial={{ opacity: 0, y: 14, filter: "blur(6px)" }}
-              animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-              transition={{ delay: 1.2 + i * 0.08, duration: 0.65, ease: easeOut }}
-              whileHover={{ y: -2 }}
-              className="group bg-[#0a0a0c]/80 px-4 sm:px-5 py-4 hover:bg-white/[0.025] transition-colors cursor-default relative overflow-hidden"
-            >
-              <span className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-violet-400/0 to-transparent group-hover:via-violet-400/60 transition-colors" />
-              <div className="text-[10.5px] font-mono uppercase tracking-[0.18em] text-zinc-500">{cell.k}</div>
-              <div className="mt-1 text-[14px] text-zinc-100">{cell.v}</div>
-            </motion.div>
-          ))}
-        </div>
+        {heroMeta && heroMeta.length > 0 && (
+          <div
+            className="mt-20 sm:mt-28 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.02]"
+            style={{ gridTemplateColumns: `repeat(auto-fit, minmax(160px, 1fr))` }}
+          >
+            {heroMeta.map((cell, i) => (
+              <motion.div
+                key={cell.id || cell.label}
+                initial={{ opacity: 0, y: 14, filter: "blur(6px)" }}
+                animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                transition={{ delay: 1.2 + i * 0.08, duration: 0.65, ease: easeOut }}
+                whileHover={{ y: -2 }}
+                className="group bg-[#0a0a0c]/80 px-4 sm:px-5 py-4 hover:bg-white/[0.025] transition-colors cursor-default relative overflow-hidden"
+              >
+                <span className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-violet-400/0 to-transparent group-hover:via-violet-400/60 transition-colors" />
+                <div className="text-[10.5px] font-mono uppercase tracking-[0.18em] text-zinc-500">{cell.label}</div>
+                <div className="mt-1 text-[14px] text-zinc-100">{cell.value}</div>
+              </motion.div>
+            ))}
+          </div>
+        )}
 
         {/* Scroll indicator */}
         <motion.div
