@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Nav from "../components/Nav";
 import Hero from "../components/Hero";
 import Marquee from "../components/Marquee";
@@ -10,9 +11,12 @@ import Contact from "../components/Contact";
 import Footer from "../components/Footer";
 import BusinessCard from "../components/BusinessCard";
 import { useLenis } from "../lib/useLenis";
+import { useSecretCode } from "../lib/useSecretCode";
 
 export default function PublicSite() {
   useLenis();
+  const navigate = useNavigate();
+  useSecretCode("admin", () => navigate("/login"));
   const [cardOpen, setCardOpen] = useState(false);
 
   return (
