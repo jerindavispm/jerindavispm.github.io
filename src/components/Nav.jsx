@@ -32,9 +32,14 @@ export default function Nav({ onOpenCard }) {
           ].join(" ")}
         >
           <a href="#top" className="group flex items-center gap-2.5">
-            <span className="relative grid place-items-center w-8 h-8 rounded-full bg-gradient-to-br from-violet-500/90 via-indigo-500/90 to-sky-500/90 text-white text-[13px] font-semibold tracking-tight">
-              <span className="relative z-10">JD</span>
-              <span className="absolute inset-0 rounded-full bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+            <span className="relative grid place-items-center w-9 h-9 rounded-xl overflow-hidden ring-1 ring-white/10 group-hover:ring-white/25 transition-all">
+              <img
+                src="/jd-logo.png"
+                alt="JD"
+                width="36"
+                height="36"
+                className="w-full h-full object-cover"
+              />
             </span>
             <span className="hidden sm:flex flex-col leading-none">
               <span className="text-[13px] font-medium tracking-tight text-zinc-100">{profile.name}</span>
