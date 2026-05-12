@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { ChevronDown, Save, Trash2, Plus, X } from "lucide-react";
+import { ChevronDown, Save, Trash2, Plus, X, ChevronUp, ArrowDown } from "lucide-react";
 import { supabase } from "../../lib/supabase";
 import { useContent } from "../../lib/ContentContext";
 import { Button, AddBtn, Toast, ConfirmDelete } from "./ui";
@@ -88,6 +88,33 @@ export default function ListEditor({
     refresh();
   }
 
+  async function move(item, direction) {
+    const i = items.findIndex((it) => getKey(it) === getKey(item));
+    const j = direction === "up" ? i - 1 : i + 1;
+    if (j < 0 || j >= items.length) return;
+    const neighbor = items[j];
+    setBusyId(getKey(item));
+    // Swap sort_orders by index-based reassignment. Two-step write avoids
+    // unique-constraint conflicts even though we don't have one today.
+    const { error: e1 } = await supabase
+      .from(table)
+      .update({ sort_order: -1 })
+      .eq("id", item.id);
+    if (e1) { setBusyId(null); setToast({ kind: "err", message: e1.message }); return; }
+    const { error: e2 } = await supabase
+      .from(table)
+      .update({ sort_order: i + 1 })
+      .eq("id", neighbor.id);
+    if (e2) { setBusyId(null); setToast({ kind: "err", message: e2.message }); return; }
+    const { error: e3 } = await supabase
+      .from(table)
+      .update({ sort_order: j + 1 })
+      .eq("id", item.id);
+    setBusyId(null);
+    if (e3) { setToast({ kind: "err", message: e3.message }); return; }
+    refresh();
+  }
+
   return (
     <div className="space-y-3">
       {/* New item form */}
@@ -128,28 +155,53 @@ export default function ListEditor({
       </AnimatePresence>
 
       {/* Existing items */}
-      {items.map((item) => {
+      {items.map((item, idx) => {
         const key = getKey(item);
         const isOpen = openId === key;
         const draft = drafts[key];
+        const canUp = idx > 0;
+        const canDown = idx < items.length - 1;
         return (
           <div key={key} className="rounded-2xl border border-white/[0.06] bg-white/[0.02] overflow-hidden">
-            <button
-              type="button"
-              onClick={() => startEdit(item)}
-              className="w-full px-5 py-4 flex items-center justify-between gap-4 hover:bg-white/[0.025] transition-colors text-left"
-            >
-              <div className="min-w-0">
-                <div className="text-[15px] text-zinc-100 truncate">{getTitle(item)}</div>
-                {getSubtitle && (
-                  <div className="text-[12px] text-zinc-500 mt-0.5 truncate">{getSubtitle(item)}</div>
-                )}
+            <div className="flex items-center hover:bg-white/[0.025] transition-colors">
+              {/* Reorder controls */}
+              <div className="flex flex-col items-center justify-center gap-px pl-2 pr-1 py-2 shrink-0">
+                <button
+                  type="button"
+                  onClick={(e) => { e.stopPropagation(); move(item, "up"); }}
+                  disabled={!canUp || busyId === key}
+                  title="Move up"
+                  className="grid place-items-center h-6 w-6 rounded-md text-zinc-500 hover:text-zinc-100 hover:bg-white/[0.05] disabled:opacity-25 disabled:hover:bg-transparent disabled:cursor-not-allowed transition-colors"
+                >
+                  <ChevronUp size={14} strokeWidth={1.8} />
+                </button>
+                <button
+                  type="button"
+                  onClick={(e) => { e.stopPropagation(); move(item, "down"); }}
+                  disabled={!canDown || busyId === key}
+                  title="Move down"
+                  className="grid place-items-center h-6 w-6 rounded-md text-zinc-500 hover:text-zinc-100 hover:bg-white/[0.05] disabled:opacity-25 disabled:hover:bg-transparent disabled:cursor-not-allowed transition-colors"
+                >
+                  <ArrowDown size={14} strokeWidth={1.8} />
+                </button>
               </div>
-              <ChevronDown
-                size={16}
-                className={`shrink-0 text-zinc-500 transition-transform ${isOpen ? "rotate-180" : ""}`}
-              />
-            </button>
+              <button
+                type="button"
+                onClick={() => startEdit(item)}
+                className="flex-1 min-w-0 px-3 py-4 flex items-center justify-between gap-4 text-left"
+              >
+                <div className="min-w-0">
+                  <div className="text-[15px] text-zinc-100 truncate">{getTitle(item)}</div>
+                  {getSubtitle && (
+                    <div className="text-[12px] text-zinc-500 mt-0.5 truncate">{getSubtitle(item)}</div>
+                  )}
+                </div>
+                <ChevronDown
+                  size={16}
+                  className={`shrink-0 text-zinc-500 transition-transform ${isOpen ? "rotate-180" : ""}`}
+                />
+              </button>
+            </div>
 
             <AnimatePresence initial={false}>
               {isOpen && draft && (
